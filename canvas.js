@@ -149,10 +149,21 @@ function pageScrolled(event)
 {
     event.preventDefault();
 
-    scalelevel -= event.deltaY * 0.01;
+    width = innerWidth / scale;
+    height = innerHeight / scale;
+
+    scalelevel += event.deltaY * 0.001;
     scalelevel = Math.min(Math.max(scalelevel, -0.5), 2);
 
+    console.log(scalelevel);
+
     scale = Math.pow(scalelevel + 1, -2);
+
+    width -= innerWidth / scale;
+    height -= innerHeight / scale;
+
+    cameraX += width / 2;
+    cameraY += height / 2;
 }
 
 function loop()
@@ -173,13 +184,16 @@ function loop()
 
     //Drawing the grid
 
-    topLeftX = Math.floor(cameraX * scale / gridSize) * gridSize;
-    topLeftY = Math.floor(cameraY * scale / gridSize) * gridSize;
+    topLeftX = Math.floor(cameraX / gridSize) * gridSize;
+    topLeftY = Math.floor(cameraY / gridSize) * gridSize;
+
+    bottomRightX = Math.floor((cameraX + innerWidth / scale) / gridSize) * gridSize;
+    bottomRightY = Math.floor((cameraY + innerHeight / scale) / gridSize) * gridSize;
     
-    if(scalelevel < 1)
+    if(scalelevel < 1.5)
     {
-        for(x = topLeftX; x < (cameraX + innerWidth + gridSize) / scale; x += gridSize)
-        for(y = topLeftY; y < (cameraY + innerHeight + gridSize) / scale; y += gridSize)
+        for(x = topLeftX; x <= bottomRightX; x += gridSize)
+        for(y = topLeftY; y <= bottomRightY; y += gridSize)
         {
             c.fillStyle = '#bbbbbb';
             c.fillRect(x, y, gridSize, gridSize);
@@ -202,19 +216,19 @@ function loop()
 
     if(moveUp)
     {
-        cameraY -= 5;
+        cameraY -= 5 / scale;
     }
     if(moveDown)
     {
-        cameraY += 5;
+        cameraY += 5 / scale;
     }
     if(moveLeft)
     {
-        cameraX -= 5;
+        cameraX -= 5 / scale;
     }
     if(moveRight)
     {
-        cameraX += 5;
+        cameraX += 5 / scale;
     }
 
     buttonTest.draw(c);
