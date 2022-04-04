@@ -129,6 +129,47 @@ class Slider
     }
 }
 
+class TextField
+{
+    text = "";
+    selected = false;
+
+    constructor(x, y, width, height)
+    {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
+    draw(canvas)
+    {
+        if(!this.selected) canvas.fillStyle = "#cccccc";
+        else canvas.fillStyle = "#ffffff";
+
+        canvas.fillRect(this.x, this.y, this.width, this.height);
+
+        canvas.fillStyle = "#202020";
+        canvas.font = "18px sans-serif";
+        canvas.fillText(this.text, this.x + 2, this.y - (this.height / 5) + this.height, this.width);
+    }
+
+    update(lmb, mouseX, mouseY)
+    {
+        if(lmb)
+        {
+            if(mouseX > this.x && mouseX < this.x + this.width && mouseY > this.y && mouseY < this.y + this.height)
+            {
+                this.selected = true;
+            }
+            else
+            {
+                this.selected = false;
+            }
+        }
+    }
+}
+
 function fillRoundedRect(canvas, x, y, width, height, color, radius)
 {
     canvas.fillStyle = color;
