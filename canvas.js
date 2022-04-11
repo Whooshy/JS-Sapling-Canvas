@@ -1,163 +1,102 @@
 const canvas = document.querySelector('canvas');
-canvas.width = innerWidth;
 canvas.height = innerHeight;
+canvas.width = innerWidth;
 
-var lmb = false;
-var rmb = false;
+//Canvas Related Variables
+var topLeftX = 0;
+var topLeftY = 0;
+var bottomRightX = 0;
+var bottomRightY = 0;
+var gridAligning = true;
+var gridSize = 50;
+var BorderOffset = 5; 
 
-var lmbClicked = false;
-var rmbClicked = false;
-
-var inputMode = 0;
-var selectedTextField = -1;
-
-var mouseX, mouseY;
-
+//Camera Related Variables
 var cameraX = 0;
 var cameraY = 0;
-
 var scale = 1;
 var scalelevel = 0;
 
-var memberSelected = -1;
+//Selection Variables
 var relationSelected = -1;
+var memberSelected = -1;
 
-var gridSize = 50;
+var memberRelationSelect = -1;
 
-var moveUp = false;
-var moveLeft = false;
-var moveDown = false;
-var moveRight = false;
+//Modes
+var inputMode = 0;
 
-var gridAligning = true;
+//Input Variables
+var mouseX = 0;
+var mouseY = 0;
 
-class Member
-{
-    offsetX = -1;
-    offsetY = -1;
-    
-    isMoving = false;
-
-    constructor(name, x, y)
-    {
-        this.name = name;
-        this.x = x;
-        this.y = y;
-    }
-
-    draw(canvas)
-    {
-        fillRoundedRect(canvas, this.x, this.y, 100, 150, '#202020', 20);
-    }
-
-    isHovering(mouseX, mouseY)
-    {
-        if(mouseX > (this.x - cameraX) * scale && mouseX < (this.x + 100 - cameraX) * scale && mouseY > (this.y - cameraY) * scale && mouseY < (this.y + 150 - cameraY) * scale)
-        {
-            return true;
-        }
-        return false
-    }
-
-    update()
-    {
-        if(this.isMoving)
-        {
-            if(this.offsetX == -1 && this.offsetY == -1)
-            {
-                this.offsetX = mouseX / scale + cameraX - this.x;
-                this.offsetY = mouseY / scale + cameraY - this.y;
-            }
-            if(gridAligning)
-            {
-                this.x = Math.floor((mouseX / scale + cameraX - this.offsetX) / gridSize) * gridSize;
-                this.y = Math.floor((mouseY / scale + cameraY - this.offsetY) / gridSize) * gridSize;
-            }
-            else
-            {
-                this.x = mouseX / scale + cameraX - this.offsetX;
-                this.y = mouseY / scale + cameraY - this.offsetY;
-            }
-        }
-        else
-        {
-            this.offsetX = -1;
-            this.offsetY = -1;
-        }
-    }
+var movementDir = {
+    "up" : false,
+    "down" : false,
+    "left" : false,
+    "right" : false
 }
 
 const members = [];
-
-const sliders = [];
-const text_fields = [];
-
-sliders.push(new Slider(innerWidth - 200, 270, 100, 5, 10, 10, 0));
-sliders.push(new Slider(innerWidth - 200, 295, 100, 5, 10, 10, 0));
-sliders.push(new Slider(innerWidth - 200, 320, 100, 5, 10, 10, 0));
-
-text_fields.push(new TextField(innerWidth - 290, 90, 280, 25));
-
-text_fields.push(new TextField(innerWidth - 180, 135, 40, 20));
-text_fields.push(new TextField(innerWidth - 130, 135, 40, 20));
-text_fields.push(new TextField(innerWidth - 80, 135, 60, 20));
-
-text_fields.push(new TextField(innerWidth - 180, 160, 40, 20));
-text_fields.push(new TextField(innerWidth - 130, 160, 40, 20));
-text_fields.push(new TextField(innerWidth - 80, 160, 60, 20));
-
-text_fields.push(new TextField(innerWidth - 210, 206, 200, 25));
+const relations = [];
 
 var test1 = new Member("Gaming Tim", 100, 100);
 var test2 = new Member("Gaming John", 300, 100);
 
-var buttonTest = new Button(50, 50, 100, 50, "Hello");
 var sliderTest = new Slider(50, 125, 100, 5, 25, 25, 0.5);
 
 members.push(test1);
 members.push(test2);
 
+relations.push(new Relation(members[0],members[1]));
+
 var c = canvas.getContext('2d');
+
+function addMember()
+{
+    inputMode = 1;
+}
 
 function mousePressed(event)
 {
-    if(event.button == 0) lmb = true;
-    if(event.button == 2) rmb = true;
-    
     x = event.clientX;
     y = event.clientY;
 
-    if(lmb)
+    memberSelected = -1;
+    relationSelected = -1;
+
+    if(event.button == 0 && inputMode != 1)
     {
         for(i = 0; i < members.length; i++)
         {
             if(members[i].isHovering(x, y))
             {
                 members[i].isMoving = true;
+                memberSelected = i;
+                if(inputMode == 2)
+                {
+                    relations.push(new Relation(members[memberRelationSelect], members[memberSelected]));
+                    inputMode = 0;
+                }
+            }
+        }
+        for(i = 0; i < relations.length; i++)
+        {
+            if(relations[i].isHovering(x, y))
+            {
+                relationSelected = i;
             }
         }
     }
-}
-
-function mouseReleased(event)
-{
-    if(event.button == 0)
+    else if(event.button == 0 && inputMode == 1)
     {
-        lmb = false;
-        lmbClicked = true;
-    }
-    if(event.button == 2)
-    {
-        rmb = false;
-        rmbClicked = true;
+        members.push(new Member("", Math.floor((x / scale + cameraX - 33) / gridSize) * gridSize, Math.floor((y / scale + cameraY - 50) / gridSize) * gridSize));
+        inputMode = 0;
     }
 
-    if(event.button == 0)
+    if(event.button == 2 && inputMode == 2)
     {
-        for(i = 0; i < members.length; i++)
-        {
-            members[i].isMoving = false;
-        }
+        inputMode = 0;
     }
 }
 
@@ -167,110 +106,80 @@ function mouseMoved(event)
     mouseY = event.clientY;
 }
 
+function mouseReleased(event)
+{
+    if(event.button == 0)
+    {
+        for(i = 0; i < members.length; i++)
+        {
+            members[i].isMoving = false;
+        }
+    }
+}
+
 //Handler for key pressing events.
 function keyPressed(event)
 {
-    if(inputMode == 0)
+    key = event.key;
+
+    if(key == 'w')
     {
-        key = event.key;
-        if(key == 'w')
+        movementDir.up = true;
+        moveUp = true;
+    }
+    if(key == 'a')
+    {
+        movementDir.left = true;
+        moveLeft = true;
+    }
+    if(key == 's')
+    {
+        movementDir.down = true;
+        moveDown = true;
+    }
+    if(key == 'd')
+    {
+        movementDir.right = true;
+        moveRight = true;
+    }
+    if(key == 'n')
+    {
+        inputMode = 1;
+    }
+    if(key == 'm' && inputMode == 0 && memberSelected != -1)
+    {
+        memberRelationSelect = memberSelected;
+        memberSelected = -1;
+        inputMode = 2;
+    }
+    if(key == ',' && relationSelected != -1)
+    {
+        if(relations[relationSelected].modeModifier == 0) relations[relationSelected].modeModifier = 1;
+        else if(relations[relationSelected].modeModifier == 1) relations[relationSelected].modeModifier = 0;
+    }
+    if(key == "Delete")
+    {
+        if(memberSelected != -1)
         {
-            moveUp = true;
+            for(i = 0; i < relations.length; i++)
+            {
+                if(relations[i].memberA == members[memberSelected] || relations[i].memberB == members[memberSelected])
+                {
+                    relations.splice(i, 1);
+                }
+            }
+            members.splice(memberSelected, 1);
+            memberSelected = -1;
         }
-        if(key == 'a')
+        if(relationSelected != -1)
         {
-            moveLeft = true;
-        }
-        if(key == 's')
-        {
-            moveDown = true;
-        }
-        if(key == 'd')
-        {
-            moveRight = true;
-        }
-    
-        if(event.shiftKey)
-        {
-            gridAligning = false;
+            relations.splice(relationSelected, 1);
+            relationSelected = -1;
         }
     }
-    else if(inputMode == 1)
+    if(event.shiftKey)
     {
-        key = event.key;
-        if(key == "Backspace" && text_fields[selectedTextField].text.length > 0)
-        {
-            text_fields[selectedTextField].text =
-                text_fields[selectedTextField].text.toString().substring(0, text_fields[selectedTextField].text.length - 1);
-        }
-        switch(key)
-        {
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-            case 'a':
-            case 'b':
-            case 'c':
-            case 'd':
-            case 'e':
-            case 'f':
-            case 'g':
-            case 'h':
-            case 'i':
-            case 'j':
-            case 'k':
-            case 'l':
-            case 'm':
-            case 'n':
-            case 'o':
-            case 'p':
-            case 'q':
-            case 'r':
-            case 's':
-            case 't':
-            case 'u':
-            case 'v':
-            case 'w':
-            case 'x':
-            case 'y':
-            case 'z':
-            case 'A':
-            case 'B':
-            case 'C':
-            case 'D':
-            case 'E':
-            case 'F':
-            case 'G':
-            case 'H':
-            case 'I':
-            case 'J':
-            case 'K':
-            case 'L':
-            case 'M':
-            case 'N':
-            case 'O':
-            case 'P':
-            case 'Q':
-            case 'R':
-            case 'S':
-            case 'T':
-            case 'U':
-            case 'V':
-            case 'W':
-            case 'X':
-            case 'Y':
-            case 'Z':
-            case ' ':
-                text_fields[selectedTextField].text += key;
-                break;
-        }
+        gridAligning = false;
     }
 }
 
@@ -278,37 +187,21 @@ function keyPressed(event)
 function keyReleased(event)
 {
     key = event.key;
-    if(key == 'w')
-    {
-        moveUp = false;
-    }
-    if(key == 'a')
-    {
-        moveLeft = false;
-    }
-    if(key == 's')
-    {
-        moveDown = false;
-    }
-    if(key == 'd')
-    {
-        moveRight = false;
-    }
+    movementDir.up = !(key == 'w') & movementDir.up;
+    movementDir.down = !(key == 's') & movementDir.down;
+    movementDir.left = !(key == 'a') & movementDir.left;
+    movementDir.right = !(key == 'd') & movementDir.right;
 
     gridAligning = true;
 }
 
 function pageScrolled(event)
 {
-    event.preventDefault();
-
     width = innerWidth / scale;
     height = innerHeight / scale;
 
     scalelevel += event.deltaY * 0.001;
     scalelevel = Math.min(Math.max(scalelevel, -0.5), 2);
-
-    console.log(scalelevel);
 
     scale = Math.pow(scalelevel + 1, -2);
 
@@ -319,13 +212,11 @@ function pageScrolled(event)
     cameraY += height / 2;
 }
 
-function loop()
+function updateCamera()
 {
-    requestAnimationFrame(loop);
-
     //Canvas is resized each frame to cover the whole screen.
     canvas.width = innerWidth;
-    canvas.height = innerHeight;
+    canvas.height = innerHeight - 7;
 
     //Filling the background with a white quad to avoid overdrawing.
     c.fillStyle = '#ffffff';
@@ -336,13 +227,70 @@ function loop()
     c.translate(-cameraX, -cameraY);
 
     //Drawing the grid
-
     topLeftX = Math.floor(cameraX / gridSize) * gridSize;
     topLeftY = Math.floor(cameraY / gridSize) * gridSize;
 
     bottomRightX = Math.floor((cameraX + innerWidth / scale) / gridSize) * gridSize;
     bottomRightY = Math.floor((cameraY + innerHeight / scale) / gridSize) * gridSize;
+
+    //Moving the camera.
+    if(movementDir.up)
+    {
+        cameraY -= 5 / scale;
+    }
+    if(movementDir.down)
+    {
+        cameraY += 5 / scale;
+    }
+    if(movementDir.left)
+    {
+        cameraX -= 5 / scale;
+    }
+    if(movementDir.right)
+    {
+        cameraX += 5 / scale;
+    }
+}
+
+function loop()
+{
+    requestAnimationFrame(loop);
+    updateCamera();
     
+    drawGrid();
+
+    //Drawing and each relation.
+    for(i = 0; i < relations.length; i++)
+    {
+        relations[i].selected = (i == relationSelected);
+        relations[i].draw(c, relationSelected == i);
+    }
+    //Drawing and updating each member.
+    for(i = 0; i < members.length; i++)
+    {
+        members[i].selected = (i == memberSelected);
+        members[i].update();
+        members[i].draw(c);
+    }
+
+    //Placing a member.
+    if(inputMode == 1)
+    {
+        fillRoundedRect(c, Math.floor((mouseX / scale + cameraX - 33) / gridSize) * gridSize, Math.floor((mouseY / scale + cameraY - 50) / gridSize) * gridSize, 100, 150, '#c0c0c0', 20);
+    }
+
+    //Placing a relation.
+    if(inputMode == 2)
+    {
+        line(c, members[memberRelationSelect].x + 50, members[memberRelationSelect].y + 75, (mouseX / scale) + cameraX, (mouseY / scale) + cameraY, "#999999", 25);
+    }
+
+    c.translate(cameraX, cameraY);
+    c.scale(1 / scale, 1 / scale);
+}
+
+function drawGrid()
+{
     if(scalelevel < 1.5 && gridAligning)
     {
         for(x = topLeftX; x <= bottomRightX; x += gridSize)
@@ -354,97 +302,6 @@ function loop()
             c.fillRect(x + 1, y + 1, gridSize - 1, gridSize - 1);
         }
     }
-
-    //Drawing the selection outlines
-    if(memberSelected != -1)
-    {
-        fillRoundedRect(c, members[memberSelected].x - 5, members[memberSelected].y - 5, 110, 160, "#109933", 25);
-        fillRoundedRect(c, members[memberSelected].x - 2, members[memberSelected].y - 2, 104, 154, "#ffffff", 22);
-    }
-
-    //Drawing and updating each member.
-    for(i = 0; i < members.length; i++)
-    {
-        if(lmbClicked && members[i].isHovering(mouseX, mouseY))
-        {
-            memberSelected = i;
-        }
-        members[i].draw(c);
-        members[i].update();
-    }
-
-    c.translate(cameraX, cameraY);
-    c.scale(1 / scale, 1 / scale);
-
-    //Moving the camera.
-
-    if(moveUp)
-    {
-        cameraY -= 5 / scale;
-    }
-    if(moveDown)
-    {
-        cameraY += 5 / scale;
-    }
-    if(moveLeft)
-    {
-        cameraX -= 5 / scale;
-    }
-    if(moveRight)
-    {
-        cameraX += 5 / scale;
-    }
-
-    if(memberSelected != -1)
-    {
-        c.fillStyle = '#202020';
-        c.fillRect(innerWidth - 300, 0, 300, innerHeight);
-
-        c.fillStyle = '#ffffff';
-        c.font = '30px sans-serif';
-        c.fillText("Edit Member", innerWidth - 290, 30, 1000);
-
-        c.font = '15px sans-serif';
-        c.fillText("Name:", innerWidth - 290, 80, 1000);
-        c.fillText("Date of Birth:", innerWidth - 290, 150, 1000);
-        c.fillText("Date of Death:", innerWidth - 290, 175, 1000);
-        c.fillText("Birthplace:", innerWidth - 290, 225, 1000);
-        c.fillText("Color:", innerWidth - 290, 275, 1000);
-
-        selectedTextField = -1;
-        for(i = 0; i < text_fields.length; i++)
-        {
-            text_fields[i].draw(c, false);
-            text_fields[i].update(lmbClicked, mouseX, mouseY);
-            if(text_fields[i].selected)
-            {
-                selectedTextField = i;
-            }
-        }
-        for(i = 0; i < sliders.length; i++)
-        {
-            sliders[i].draw(c);
-            sliders[i].update(lmb, mouseX, mouseY);
-        }
-    }
-
-    if(selectedTextField != -1)
-    {
-        inputMode = 1;
-    }
-    else
-    {
-        inputMode = 0;
-    }
-
-    buttonTest.draw(c);
-    buttonTest.update(lmb, mouseX, mouseY);
-
-    sliderTest.draw(c);
-    sliderTest.update(lmb, mouseX, mouseY);
-
-    if(lmbClicked) lmbClicked = false;
-    if(rmbClicked) rmbClicked = false;
 }
 
 addEventListener('mousedown', mousePressed);
@@ -453,7 +310,6 @@ addEventListener('mousemove', mouseMoved);
 
 addEventListener('keydown', keyPressed);
 addEventListener('keyup', keyReleased);
-
 addEventListener('wheel', pageScrolled);
 
 loop();
