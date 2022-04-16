@@ -18,10 +18,15 @@ class Member
     draw(canvas)
     {
         if(this.selected)
-        {
             fillRoundedRect(c, this.x - BorderOffset, this.y - BorderOffset,  this.defaultWidth + (BorderOffset * 2), this.defaultHeight + (BorderOffset * 2), "green", this.defaultCornerRad + BorderOffset);
-        }
         fillRoundedRect(canvas, this.x, this.y,this.defaultWidth, this.defaultHeight, "black", this.defaultCornerRad);
+        if(this.selected)
+        {
+            c.fillStyle = "green";
+            c.fillRect(this.x + 20, this.y - 2, 60, 42);
+
+            c.drawImage(relationImage, this.x + 30, this.y + 2);
+        }
     }
 
     isHovering(mouseX, mouseY)
@@ -31,6 +36,11 @@ class Member
             return true;
         }
         return false
+    }
+
+    pickedRelationCreation(lmb, mouseX, mouseY)
+    {
+        return lmb && this.offsetX == (mouseX / scale + cameraX - this.x) && this.offsetY == (mouseY / scale + cameraY - this.y) && mouseX > (this.x - cameraX + 20) * scale && mouseX < (this.x - cameraX + 80) && mouseY > (this.y - cameraY) * scale && mouseY < (this.y - cameraY + 40) * scale;
     }
 
     update()
@@ -58,11 +68,5 @@ class Member
             this.offsetX = -1;
             this.offsetY = -1;
         }
-    }
-
-    collides(x,y)
-    {
-        //collision detection for memeber boxes
-        return false;
     }
 }

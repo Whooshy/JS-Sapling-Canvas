@@ -1,3 +1,5 @@
+const relationImage = document.getElementById("relationCreate");
+
 class Button
 {
     colorIdle = "#444444";

@@ -22,6 +22,7 @@ var relationSelected = -1;
 var memberSelected = -1;
 
 var memberRelationSelect = -1;
+var relationRelationSelect = -1;
 
 //Modes
 var inputMode = 0;
@@ -29,6 +30,8 @@ var inputMode = 0;
 //Input Variables
 var mouseX = 0;
 var mouseY = 0;
+
+var lmb = false;
 
 var movementDir = {
     "up" : false,
@@ -40,17 +43,13 @@ var movementDir = {
 const members = [];
 const relations = [];
 
-var test1 = new Member("Gaming Tim", 100, 100);
-var test2 = new Member("Gaming John", 300, 100);
-
-var sliderTest = new Slider(50, 125, 100, 5, 25, 25, 0.5);
-
-members.push(test1);
-members.push(test2);
-
-relations.push(new Relation(members[0],members[1]));
-
 var c = canvas.getContext('2d');
+
+createRelationButton = new Button(0, 0, 60, 40, "");
+
+createRelationButton.colorIdle = "green";
+createRelationButton.colorHover = "#139923";
+createRelationButton.colorPressed = "#30ff60";
 
 function addMember()
 {
@@ -65,6 +64,8 @@ function mousePressed(event)
     memberSelected = -1;
     relationSelected = -1;
 
+    if(event.button == 0) lmb = true;
+
     if(event.button == 0 && inputMode != 1)
     {
         for(i = 0; i < members.length; i++)
@@ -73,9 +74,9 @@ function mousePressed(event)
             {
                 members[i].isMoving = true;
                 memberSelected = i;
-                if(inputMode == 2)
+                if(inputMode == 2 && i != memberRelationSelect)
                 {
-                    relations.push(new Relation(members[memberRelationSelect], members[memberSelected]));
+                    relations.push(new RelationToM(members[memberRelationSelect], members[memberSelected]));
                     inputMode = 0;
                 }
             }
@@ -85,6 +86,11 @@ function mousePressed(event)
             if(relations[i].isHovering(x, y))
             {
                 relationSelected = i;
+                if(inputMode == 2)
+                {
+                    relations.push(new RelationToR(members[memberRelationSelect], relations[relationSelected]));
+                    inputMode = 0;
+                }
             }
         }
     }
@@ -110,6 +116,8 @@ function mouseReleased(event)
 {
     if(event.button == 0)
     {
+        lmb = false;
+
         for(i = 0; i < members.length; i++)
         {
             members[i].isMoving = false;
@@ -145,12 +153,6 @@ function keyPressed(event)
     if(key == 'n')
     {
         inputMode = 1;
-    }
-    if(key == 'm' && inputMode == 0 && memberSelected != -1)
-    {
-        memberRelationSelect = memberSelected;
-        memberSelected = -1;
-        inputMode = 2;
     }
     if(key == ',' && relationSelected != -1)
     {
@@ -216,7 +218,7 @@ function updateCamera()
 {
     //Canvas is resized each frame to cover the whole screen.
     canvas.width = innerWidth;
-    canvas.height = innerHeight - 7;
+    canvas.height = innerHeight;
 
     //Filling the background with a white quad to avoid overdrawing.
     c.fillStyle = '#ffffff';
@@ -259,6 +261,18 @@ function loop()
     
     drawGrid();
 
+    //Placing a member.
+    if(inputMode == 1)
+    {
+        fillRoundedRect(c, Math.floor((mouseX / scale + cameraX - 33) / gridSize) * gridSize, Math.floor((mouseY / scale + cameraY - 50) / gridSize) * gridSize, 100, 150, '#c0c0c0', 20);
+    }
+
+    //Placing a relation.
+    if(inputMode == 2)
+    {
+        line(c, members[memberRelationSelect].x + 50, members[memberRelationSelect].y + 75, (mouseX / scale) + cameraX, (mouseY / scale) + cameraY, "#999999", 25);
+    }
+
     //Drawing and each relation.
     for(i = 0; i < relations.length; i++)
     {
@@ -273,16 +287,12 @@ function loop()
         members[i].draw(c);
     }
 
-    //Placing a member.
-    if(inputMode == 1)
+    if(memberSelected != -1 && members[memberSelected].pickedRelationCreation(lmb, mouseX, mouseY))
     {
-        fillRoundedRect(c, Math.floor((mouseX / scale + cameraX - 33) / gridSize) * gridSize, Math.floor((mouseY / scale + cameraY - 50) / gridSize) * gridSize, 100, 150, '#c0c0c0', 20);
-    }
-
-    //Placing a relation.
-    if(inputMode == 2)
-    {
-        line(c, members[memberRelationSelect].x + 50, members[memberRelationSelect].y + 75, (mouseX / scale) + cameraX, (mouseY / scale) + cameraY, "#999999", 25);
+        memberRelationSelect = memberSelected;
+        memberSelected = -1;
+        relationSelected = -1;
+        inputMode = 2;
     }
 
     c.translate(cameraX, cameraY);

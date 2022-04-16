@@ -1,21 +1,50 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>Sapling</title>
-    <style>
-        body
-        {
-            margin: 0px;
-        }
-        canvas
-        {
-            border: 0px;
-            display: block;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A tool for creating and displaying flexible family trees.">
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital@0;1&display=swap" rel="stylesheet"> 
 </head>
-<body oncontextmenu="return false;">
-    <canvas></canvas>
-    <script src="canvasutils.js"></script>
-    <script src="canvas.js"></script>
+<body>
+    <header>
+        <div class="leftheader">
+            <h1>Sapling</h1>
+            <a href="index.html" aria-current="page"><span style="border-bottom: 2px solid #333F20;">Home</span></a> | 
+            <a href="help.html">Instructions, Help and FAQ</a> | 
+            <a href="edittree.html">Edit Tree</a> | 
+            <a href="members.html">Member List Example</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="login">
+            <div class="loginitem">
+            <h2>Welcome to Sapling!</h2>
+            <p>Make highly flexible and customizable family trees and invite your family to collaborate!</p>
+            </div>
+            <div class="loginitem">
+            <h2>Log-In or Create an Account</h2>
+            <p>[Google log-in API]</p>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="content">
+            <h3>What is Sapling?</h3>
+            <p>Sapling is an application for creating family trees that allows you to represent your family in the way you feel is most appropriate. The arrangement of members of your family and their relationships is highly flexible and entirely up to you. With the ability to customize your relationships to have colors and labels of your choice, you won't get stuck in anyone's rigid expectations. Create multiple trees to represent your forest of families and then invite your family to help you nurture them by adding collaborators.</p>
+            <h3>About the Creators</h3>
+            <p>Sapling was created by Joseph Montalvo, Trevor Strickland, Khang Tran, and Maddie Bauso during the Software Engineering course at SUNY Oswego.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Sapling &copy;2022 Joseph Montalvo, Trevor Strickland, Khang Tran, and Maddie Bauso.</p>
+    </footer>
 </body>
 </html>
