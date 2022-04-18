@@ -279,12 +279,86 @@ function loop()
         relations[i].selected = (i == relationSelected);
         relations[i].draw(c, relationSelected == i);
     }
+
     //Drawing and updating each member.
     for(i = 0; i < members.length; i++)
     {
         members[i].selected = (i == memberSelected);
         members[i].update();
         members[i].draw(c);
+    }
+
+    if(relationSelected != -1 && relations[relationSelected].isHoveringJunction(mouseX, mouseY) && lmb)
+    {
+        inputMode = 3;
+    }
+
+    if(!lmb && inputMode == 3)
+    {
+        inputMode = 0;
+    }
+
+    //Moving the junction.
+    if(inputMode == 3 && lmb)
+    {
+        if(relations[relationSelected].modeModifier == 1)
+        {
+            if(relations[relationSelected].type == 0)
+            {
+                if(relations[relationSelected].memberA.y < relations[relationSelected].memberB.y)
+                {
+                    var space = (relations[relationSelected].memberB.y - relations[relationSelected].memberA.y) / gridSize;
+                    relations[relationSelected].junction = Math.round(((mouseY / scale + cameraY) - relations[relationSelected].memberA.y - 75) / (relations[relationSelected].memberB.y - relations[relationSelected].memberA.y) * space) / space;
+                }
+                else
+                {
+                    var space = (relations[relationSelected].memberA.y - relations[relationSelected].memberB.y) / gridSize;
+                    relations[relationSelected].junction = Math.round((((mouseY / scale + cameraY) - relations[relationSelected].memberB.y - 75) / (relations[relationSelected].memberB.y - relations[relationSelected].memberA.y) + 1) * space) / space;
+                }
+            }
+            if(relations[relationSelected].type == 1)
+            {
+                if(relations[relationSelected].memberA.y < relations[relationSelected].relation.centerY)
+                {
+                    var space = (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize;
+                    relations[relationSelected].junction = Math.round(((mouseY / scale + cameraY) - relations[relationSelected].memberA.y - 75) / (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) * space) / space;
+                }
+                else 
+                {
+                    var space = (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize;
+                    relations[relationSelected].junction = Math.round((((mouseY / scale + cameraY) - relations[relationSelected].relation.centerY - 75) / (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) + 1) * space) / space;
+                }
+            }
+        }
+        else
+        {
+            if(relations[relationSelected].type == 0)
+            {
+                if(relations[relationSelected].memberA.x < relations[relationSelected].memberB.x)
+                {
+                    var space = (relations[relationSelected].memberB.y - relations[relationSelected].memberA.y) / gridSize;
+                    relations[relationSelected].junction = Math.round(((mouseX / scale + cameraX) - relations[relationSelected].memberA.x - 50) / (relations[relationSelected].memberB.x - relations[relationSelected].memberA.x) * space) / space;
+                }
+                else
+                {
+                    var space = (relations[relationSelected].memberA.y - relations[relationSelected].memberB.y) / gridSize;
+                    relations[relationSelected].junction = Math.round((((mouseX / scale + cameraX) - relations[relationSelected].memberB.x - 50) / (relations[relationSelected].memberB.x - relations[relationSelected].memberA.x) + 1) * space) / space;
+                }
+            }
+            if(relations[relationSelected].type == 1)
+            {
+                if(relations[relationSelected].memberA.x < relations[relationSelected].relation.centerX)
+                {
+                    var space = (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize;
+                    relations[relationSelected].junction = Math.round(((mouseX / scale + cameraX) - relations[relationSelected].memberA.x - 75) / (relations[relationSelected].relation.centerX - relations[relationSelected].memberA.x) * space) / space;
+                }
+                else
+                {
+                    var space = (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize;
+                    relations[relationSelected].junction = Math.round((((mouseX / scale + cameraX) - relations[relationSelected].relation.centerX - 75) / (relations[relationSelected].relation.centerX - relations[relationSelected].memberA.x) + 1) * space) / space;
+                }
+            }
+        }
     }
 
     if(memberSelected != -1 && members[memberSelected].pickedRelationCreation(lmb, mouseX, mouseY))

@@ -12,6 +12,8 @@ class RelationToM
     {
         this.memberA = memberA;
         this.memberB = memberB;
+
+        this.type = 0;
     }
 
     draw(canvas, isSelected)
@@ -86,15 +88,44 @@ class RelationToM
                 break;
             case 1: //Segmented line - vertical junction.
                 return pointOnHorizontal(x, y, minX + 100, minX + (maxX - minX) * this.junction + 50, minHorizontalIsA ? this.memberA.y + 75 : this.memberB.y + 75, 12.5)
-                || pointOnVertical(x, y, minY + 75, maxY + 75, minX + (maxX - minX) * this.junction + 50, 12.5)
+                || this.isHoveringJunction(mouseX, mouseY)
                 || pointOnHorizontal(x, y, minX + (maxX - minX) * this.junction + 50, maxX, minHorizontalIsA ? this.memberB.y + 75 : this.memberA.y + 75, 12.5);
                 break;
             case 2: //Segmented line - horizontal junction.
                 return pointOnVertical(x, y, minY + 150, minY + (maxY - minY) * this.junction + 75, minVerticalIsA ? this.memberA.x + 50 : this.memberB.x + 50, 12.5)
-                || pointOnHorizontal(x, y, minX + 50, maxX + 50, minY + (maxY - minY) * this.junction + 75, 12.5)
+                || this.isHoveringJunction(mouseX, mouseY)
                 || pointOnVertical(x, y, minY + (maxY - minY) * this.junction + 75, maxY, minVerticalIsA ? this.memberB.x + 50 : this.memberA.x + 50, 12.5);
                 break;
         }
+        return false;
+    }
+
+    isHoveringJunction(mouseX, mouseY)
+    {
+        var x = (mouseX / scale) + cameraX;
+        var y = (mouseY / scale) + cameraY;
+
+        var minX = Math.min(this.memberA.x, this.memberB.x);
+        var maxX = Math.max(this.memberA.x, this.memberB.x);
+        var minY = Math.min(this.memberA.y, this.memberB.y);
+        var maxY = Math.max(this.memberA.y, this.memberB.y);
+
+        var minHorizontalIsA = minX == this.memberA.x;
+        var minVerticalIsA = minY == this.memberA.y;
+
+        switch(this.mode)
+        {
+            case 0:
+                return false;
+                break;
+            case 1:
+                return minHorizontalIsA ? pointOnVertical(x, y, minY + 75, maxY + 75, minX + (maxX - minX) * this.junction + 50, 12.5) : pointOnVertical(x, y, minY + 75, maxY + 75, minX + (maxX - minX) * (1 - this.junction) + 50, 12.5);
+                break;
+            case 2:
+                return minVerticalIsA ? pointOnHorizontal(x, y, minX + 50, maxX + 50, minY + (maxY - minY) * this.junction + 75, 12.5) : pointOnHorizontal(x, y, minX + 50, maxX + 50, minY + (maxY - minY) * (1 - this.junction) + 75, 12.5);
+                break;
+        }
+
         return false;
     }
 
@@ -118,6 +149,8 @@ class RelationToR
     {
         this.memberA = memberA;
         this.relation = relation;
+
+        this.type = 1;
     }
 
     draw(canvas, isSelected)
@@ -192,15 +225,44 @@ class RelationToR
                 break;
             case 1: //Segmented line - vertical junction.
                 return pointOnHorizontal(x, y, minX + 100, minX + (maxX - minX) * this.junction + 50, minHorizontalIsA ? this.memberA.y + 75 : this.relation.centerY + 75, 12.5)
-                || pointOnVertical(x, y, minY + 75, maxY + 75, minX + (maxX - minX) * this.junction + 50, 12.5)
+                || this.isHoveringJunction(mouseX, mouseY)
                 || pointOnHorizontal(x, y, minX + (maxX - minX) * this.junction + 50, maxX, minHorizontalIsA ? this.relation.centerY + 75 : this.memberA.y + 75, 12.5);
                 break;
             case 2: //Segmented line - horizontal junction.
                 return pointOnVertical(x, y, minY + 150, minY + (maxY - minY) * this.junction + 75, minVerticalIsA ? this.memberA.x + 50 : this.relation.centerX + 50, 12.5)
-                || pointOnHorizontal(x, y, minX + 50, maxX + 50, minY + (maxY - minY) * this.junction + 75, 12.5)
+                || this.isHoveringJunction(mouseX, mouseY)
                 || pointOnVertical(x, y, minY + (maxY - minY) * this.junction + 75, maxY, minVerticalIsA ? this.relation.centerX + 50 : this.memberA.x + 50, 12.5);
                 break;
         }
+        return false;
+    }
+
+    isHoveringJunction(mouseX, mouseY)
+    {
+        var x = (mouseX / scale) + cameraX;
+        var y = (mouseY / scale) + cameraY;
+
+        var minX = Math.min(this.memberA.x, this.relation.centerX);
+        var maxX = Math.max(this.memberA.x, this.relation.centerX);
+        var minY = Math.min(this.memberA.y, this.relation.centerY);
+        var maxY = Math.max(this.memberA.y, this.relation.centerY);
+
+        var minHorizontalIsA = minX == this.memberA.x;
+        var minVerticalIsA = minY == this.memberA.y;
+
+        switch(this.mode)
+        {
+            case 0:
+                return false;
+                break;
+            case 1:
+                return minHorizontalIsA ? pointOnVertical(x, y, minY + 75, maxY + 75, minX + (maxX - minX) * this.junction + 50, 12.5) : pointOnVertical(x, y, minY + 75, maxY + 75, minX + (maxX - minX) * (1 - this.junction) + 50, 12.5);
+                break;
+            case 2:
+                return minVerticalIsA ? pointOnHorizontal(x, y, minX + 50, maxX + 50, minY + (maxY - minY) * this.junction + 75, 12.5) : pointOnHorizontal(x, y, minX + 50, maxX + 50, minY + (maxY - minY) * (1 - this.junction) + 75, 12.5);
+                break;
+        }
+
         return false;
     }
 
