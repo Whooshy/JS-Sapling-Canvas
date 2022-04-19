@@ -307,12 +307,12 @@ function loop()
             {
                 if(relations[relationSelected].memberA.y < relations[relationSelected].memberB.y)
                 {
-                    var space = (relations[relationSelected].memberB.y - relations[relationSelected].memberA.y) / gridSize;
+                    var space = gridAligning ? (relations[relationSelected].memberB.y - relations[relationSelected].memberA.y) / gridSize : 999999;
                     relations[relationSelected].junction = Math.round(((mouseY / scale + cameraY) - relations[relationSelected].memberA.y - 75) / (relations[relationSelected].memberB.y - relations[relationSelected].memberA.y) * space) / space;
                 }
                 else
                 {
-                    var space = (relations[relationSelected].memberA.y - relations[relationSelected].memberB.y) / gridSize;
+                    var space = gridAligning ? (relations[relationSelected].memberA.y - relations[relationSelected].memberB.y) / gridSize : 999999;
                     relations[relationSelected].junction = Math.round((((mouseY / scale + cameraY) - relations[relationSelected].memberB.y - 75) / (relations[relationSelected].memberB.y - relations[relationSelected].memberA.y) + 1) * space) / space;
                 }
             }
@@ -320,12 +320,12 @@ function loop()
             {
                 if(relations[relationSelected].memberA.y < relations[relationSelected].relation.centerY)
                 {
-                    var space = (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize;
+                    var space = gridAligning ? (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize : 999999;
                     relations[relationSelected].junction = Math.round(((mouseY / scale + cameraY) - relations[relationSelected].memberA.y - 75) / (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) * space) / space;
                 }
                 else 
                 {
-                    var space = (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize;
+                    var space = gridAligning ? (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize : 999999;
                     relations[relationSelected].junction = Math.round((((mouseY / scale + cameraY) - relations[relationSelected].relation.centerY - 75) / (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) + 1) * space) / space;
                 }
             }
@@ -336,12 +336,12 @@ function loop()
             {
                 if(relations[relationSelected].memberA.x < relations[relationSelected].memberB.x)
                 {
-                    var space = (relations[relationSelected].memberB.y - relations[relationSelected].memberA.y) / gridSize;
+                    var space = gridAligning ? (relations[relationSelected].memberB.y - relations[relationSelected].memberA.y) / gridSize : 999999;
                     relations[relationSelected].junction = Math.round(((mouseX / scale + cameraX) - relations[relationSelected].memberA.x - 50) / (relations[relationSelected].memberB.x - relations[relationSelected].memberA.x) * space) / space;
                 }
                 else
                 {
-                    var space = (relations[relationSelected].memberA.y - relations[relationSelected].memberB.y) / gridSize;
+                    var space = gridAligning ? (relations[relationSelected].memberA.y - relations[relationSelected].memberB.y) / gridSize : 999999;
                     relations[relationSelected].junction = Math.round((((mouseX / scale + cameraX) - relations[relationSelected].memberB.x - 50) / (relations[relationSelected].memberB.x - relations[relationSelected].memberA.x) + 1) * space) / space;
                 }
             }
@@ -349,12 +349,12 @@ function loop()
             {
                 if(relations[relationSelected].memberA.x < relations[relationSelected].relation.centerX)
                 {
-                    var space = (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize;
+                    var space = gridAligning ? (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize : 999999;
                     relations[relationSelected].junction = Math.round(((mouseX / scale + cameraX) - relations[relationSelected].memberA.x - 75) / (relations[relationSelected].relation.centerX - relations[relationSelected].memberA.x) * space) / space;
                 }
                 else
                 {
-                    var space = (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize;
+                    var space = gridAligning ? (relations[relationSelected].relation.centerY - relations[relationSelected].memberA.y) / gridSize : 999999;
                     relations[relationSelected].junction = Math.round((((mouseX / scale + cameraX) - relations[relationSelected].relation.centerX - 75) / (relations[relationSelected].relation.centerX - relations[relationSelected].memberA.x) + 1) * space) / space;
                 }
             }

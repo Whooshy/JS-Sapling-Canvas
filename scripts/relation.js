@@ -37,6 +37,7 @@ class RelationToM
                 break;
             //Segmented line - vertical junction.
             case 1:
+                this.centerX = (this.memberB.x - this.memberA.x) * this.junction + this.memberA.x;
                 var distX = (this.memberB.x - this.memberA.x) * this.junction;
                 if(isSelected)
                 {
@@ -50,6 +51,7 @@ class RelationToM
                 break;
             //Segmented line - horizontal junction.
             case 2:
+                this.centerY = (this.memberB.y - this.memberA.y) * this.junction + this.memberA.y;
                 var distY = (this.memberB.y - this.memberA.y) * this.junction;
                 if(isSelected)
                 {
@@ -174,6 +176,7 @@ class RelationToR
                 break;
             //Segmented line - vertical junction.
             case 1:
+                this.centerX = (this.relation.centerX - this.memberA.x) * this.junction + this.memberA.x;
                 var distX = (this.relation.centerX - this.memberA.x) * this.junction;
                 if(isSelected)
                 {
@@ -187,6 +190,7 @@ class RelationToR
                 break;
             //Segmented line - horizontal junction.
             case 2:
+                this.centerY = (this.relation.centerY - this.memberA.y) * this.junction + this.memberA.y;
                 var distY = (this.relation.centerY - this.memberA.y) * this.junction;
                 if(isSelected)
                 {
