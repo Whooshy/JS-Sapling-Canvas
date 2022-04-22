@@ -159,6 +159,11 @@ function keyPressed(event)
         if(relations[relationSelected].modeModifier == 0) relations[relationSelected].modeModifier = 1;
         else if(relations[relationSelected].modeModifier == 1) relations[relationSelected].modeModifier = 0;
     }
+    if(key == '.' && relationSelected != -1)
+    {
+        if(!relations[relationSelected].dotted) relations[relationSelected].dotted = true;
+        else relations[relationSelected].dotted = false;
+    }
     if(key == "Delete")
     {
         if(memberSelected != -1)

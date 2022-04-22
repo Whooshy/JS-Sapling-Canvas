@@ -196,48 +196,18 @@ function fillRoundedRect(canvas, x, y, width, height, color, radius)
     canvas.fillRect(x + radius, y, width - radius * 2, height);
 }
 
-function line(canvas, x1, y1, x2, y2, stroke = 'black', width = 1)
+function line(canvas, x1, y1, x2, y2, stroke = 'black', width = 1, dotted = false)
 {
     canvas.strokeStyle = stroke;
     canvas.lineWidth = width;
 
     canvas.lineCap = 'round';
+    if(dotted) canvas.setLineDash([1, 40]);
+    else canvas.setLineDash([1, 0]);
     canvas.beginPath();
     canvas.moveTo(x1,y1);
     canvas.lineTo(x2,y2);
     canvas.stroke();
-}
-
-function stepLine(canvas,x1,y1,x2,y2,midX = 0,midY = 0, stroke = "black", width = 1)
-{
-    if(midY == 0)
-    {
-        line(canvas, x1, y1 , midX, y1, stroke,width);
-        line(canvas, midX, y1, midX, y2, stroke, width);
-        line(canvas, midX, y2, x2, y2, stroke, width);
-    }
-    else if (midX == 0)
-    {
-        line(canvas, x1, y1 , x1, midY, stroke, width);
-        line(canvas, x1, midY, x2, midY, stroke, width);
-        line(canvas, x2, midY, x2, y2, stroke, width);
-    }
-}
-
-function ULine(canvas,x1,y1,x2,y2,xOff = 0,yOff = 0, stroke = "black", width = 1)
-{
-    if(xOff == 0)
-    {
-        line(canvas, x1, y1, x1, y1 + yOff, stroke, width);
-        line(canvas, x1, y1 + yOff, x2, y2 + yOff, stroke, width);
-        line(canvas, x2, y2 + yOff, x2, y2, stroke, width);
-    }
-    else if(yOff == 0)
-    {
-        line(canvas,x1, y1, x1 + xOff, y1, stroke, width);
-        line(canvas,x1 + xOff, y1, x2 + xOff, y2, stroke, width);
-        line(canvas,x2 + xOff, y2, x2, y2, stroke, width);
-    }
 }
 
 function inBounds(x, x1, x2, tolerance)

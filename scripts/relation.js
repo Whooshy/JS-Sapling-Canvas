@@ -7,6 +7,7 @@ class RelationToM
     centerY = 0;
     
     junction = 0.5;
+    dotted = false;
 
     constructor(memberA, memberB)
     {
@@ -32,8 +33,8 @@ class RelationToM
         {
             //Straight line.
             case 0:
-                if(isSelected) line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberB.x + 50, this.memberB.y + 75, "green", 35);
-                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberB.x + 50, this.memberB.y + 75, "black", 25);
+                if(isSelected) line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberB.x + 50, this.memberB.y + 75, "green", 35, this.dotted);
+                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberB.x + 50, this.memberB.y + 75, "black", 25, this.dotted);
                 break;
             //Segmented line - vertical junction.
             case 1:
@@ -41,13 +42,13 @@ class RelationToM
                 var distX = (this.memberB.x - this.memberA.x) * this.junction;
                 if(isSelected)
                 {
-                    line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberA.y + 75, "green", 35);
-                    line(canvas, this.memberA.x + distX + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberB.y + 75, "green", 35);
-                    line(canvas, this.memberA.x + distX + 50, this.memberB.y + 75, this.memberB.x + 50, this.memberB.y + 75, "green", 35);
+                    line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberA.y + 75, "green", 35, this.dotted);
+                    line(canvas, this.memberA.x + distX + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberB.y + 75, "green", 35, this.dotted);
+                    line(canvas, this.memberA.x + distX + 50, this.memberB.y + 75, this.memberB.x + 50, this.memberB.y + 75, "green", 35, this.dotted);
                 }
-                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberA.y + 75, "black", 25);
-                line(canvas, this.memberA.x + distX + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberB.y + 75, "black", 25);
-                line(canvas, this.memberA.x + distX + 50, this.memberB.y + 75, this.memberB.x + 50, this.memberB.y + 75, "black", 25);
+                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberA.y + 75, "black", 25, this.dotted);
+                line(canvas, this.memberA.x + distX + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberB.y + 75, "black", 25, this.dotted);
+                line(canvas, this.memberA.x + distX + 50, this.memberB.y + 75, this.memberB.x + 50, this.memberB.y + 75, "black", 25, this.dotted);
                 break;
             //Segmented line - horizontal junction.
             case 2:
@@ -55,13 +56,13 @@ class RelationToM
                 var distY = (this.memberB.y - this.memberA.y) * this.junction;
                 if(isSelected)
                 {
-                    line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + 50, this.memberA.y + 75 + distY, "green", 35);
-                    line(canvas, this.memberA.x + 50, this.memberA.y + 75 + distY, this.memberB.x + 50, this.memberA.y + 75 + distY, "green", 35);
-                    line(canvas, this.memberB.x + 50, this.memberA.y + 75 + distY, this.memberB.x + 50, this.memberB.y + 75, "green", 35);
+                    line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + 50, this.memberA.y + 75 + distY, "green", 35, this.dotted);
+                    line(canvas, this.memberA.x + 50, this.memberA.y + 75 + distY, this.memberB.x + 50, this.memberA.y + 75 + distY, "green", 35, this.dotted);
+                    line(canvas, this.memberB.x + 50, this.memberA.y + 75 + distY, this.memberB.x + 50, this.memberB.y + 75, "green", 35, this.dotted);
                 }
-                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + 50, this.memberA.y + 75 + distY, "black", 25);
-                line(canvas, this.memberA.x + 50, this.memberA.y + 75 + distY, this.memberB.x + 50, this.memberA.y + 75 + distY, "black", 25);
-                line(canvas, this.memberB.x + 50, this.memberA.y + 75 + distY, this.memberB.x + 50, this.memberB.y + 75, "black", 25);
+                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + 50, this.memberA.y + 75 + distY, "black", 25, this.dotted);
+                line(canvas, this.memberA.x + 50, this.memberA.y + 75 + distY, this.memberB.x + 50, this.memberA.y + 75 + distY, "black", 25, this.dotted);
+                line(canvas, this.memberB.x + 50, this.memberA.y + 75 + distY, this.memberB.x + 50, this.memberB.y + 75, "black", 25, this.dotted);
                 break;
         }
     }
@@ -146,6 +147,7 @@ class RelationToR
     centerY = 0;
     
     junction = 0.5;
+    dotted = false;
 
     constructor(memberA, relation)
     {
@@ -171,8 +173,8 @@ class RelationToR
         {
             //Straight line.
             case 0:
-                if(isSelected) line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.relation.centerX + 50, this.relation.centerY + 75, "green", 35);
-                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.relation.centerX + 50, this.relation.centerY + 75, "black", 25);
+                if(isSelected) line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.relation.centerX + 50, this.relation.centerY + 75, "green", 35, this.dotted);
+                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.relation.centerX + 50, this.relation.centerY + 75, "black", 25, this.dotted);
                 break;
             //Segmented line - vertical junction.
             case 1:
@@ -180,13 +182,13 @@ class RelationToR
                 var distX = (this.relation.centerX - this.memberA.x) * this.junction;
                 if(isSelected)
                 {
-                    line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberA.y + 75, "green", 35);
-                    line(canvas, this.memberA.x + distX + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.relation.centerY + 75, "green", 35);
-                    line(canvas, this.memberA.x + distX + 50, this.relation.centerY + 75, this.relation.centerX + 50, this.relation.centerY + 75, "green", 35);
+                    line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberA.y + 75, "green", 35, this.dotted);
+                    line(canvas, this.memberA.x + distX + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.relation.centerY + 75, "green", 35, this.dotted);
+                    line(canvas, this.memberA.x + distX + 50, this.relation.centerY + 75, this.relation.centerX + 50, this.relation.centerY + 75, "green", 35, this.dotted);
                 }
-                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberA.y + 75, "black", 25);
-                line(canvas, this.memberA.x + distX + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.relation.centerY + 75, "black", 25);
-                line(canvas, this.memberA.x + distX + 50, this.relation.centerY + 75, this.relation.centerX + 50, this.relation.centerY + 75, "black", 25);
+                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.memberA.y + 75, "black", 25, this.dotted);
+                line(canvas, this.memberA.x + distX + 50, this.memberA.y + 75, this.memberA.x + distX + 50, this.relation.centerY + 75, "black", 25, this.dotted);
+                line(canvas, this.memberA.x + distX + 50, this.relation.centerY + 75, this.relation.centerX + 50, this.relation.centerY + 75, "black", 25, this.dotted);
                 break;
             //Segmented line - horizontal junction.
             case 2:
@@ -194,13 +196,13 @@ class RelationToR
                 var distY = (this.relation.centerY - this.memberA.y) * this.junction;
                 if(isSelected)
                 {
-                    line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + 50, this.memberA.y + 75 + distY, "green", 35);
-                    line(canvas, this.memberA.x + 50, this.memberA.y + 75 + distY, this.relation.centerX + 50, this.memberA.y + 75 + distY, "green", 35);
-                    line(canvas, this.relation.centerX + 50, this.memberA.y + 75 + distY, this.relation.centerX + 50, this.relation.centerY + 75, "green", 35);
+                    line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + 50, this.memberA.y + 75 + distY, "green", 35, this.dotted);
+                    line(canvas, this.memberA.x + 50, this.memberA.y + 75 + distY, this.relation.centerX + 50, this.memberA.y + 75 + distY, "green", 35, this.dotted);
+                    line(canvas, this.relation.centerX + 50, this.memberA.y + 75 + distY, this.relation.centerX + 50, this.relation.centerY + 75, "green", 35, this.dotted);
                 }
-                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + 50, this.memberA.y + 75 + distY, "black", 25);
-                line(canvas, this.memberA.x + 50, this.memberA.y + 75 + distY, this.relation.centerX + 50, this.memberA.y + 75 + distY, "black", 25);
-                line(canvas, this.relation.centerX + 50, this.memberA.y + 75 + distY, this.relation.centerX + 50, this.relation.centerY + 75, "black", 25);
+                line(canvas, this.memberA.x + 50, this.memberA.y + 75, this.memberA.x + 50, this.memberA.y + 75 + distY, "black", 25, this.dotted);
+                line(canvas, this.memberA.x + 50, this.memberA.y + 75 + distY, this.relation.centerX + 50, this.memberA.y + 75 + distY, "black", 25, this.dotted);
+                line(canvas, this.relation.centerX + 50, this.memberA.y + 75 + distY, this.relation.centerX + 50, this.relation.centerY + 75, "black", 25, this.dotted);
                 break;
         }
     }
